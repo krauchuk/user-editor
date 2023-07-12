@@ -1,7 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit'
 
 export const getUser = createAsyncThunk('selectedUser/fetch', async (id: number) => {
-  console.log(id)
   return null
 })
 
