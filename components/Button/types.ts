@@ -1,6 +1,8 @@
 export type Props = {
   text: string
-  type?: 'regular' | 'outline'
+  type?: 'button' | 'submit' | 'reset'
+  variantType?: 'regular' | 'outline'
   variant?: 'primary' | 'secondary' | 'success' | 'danger' | 'warning'
-  onClick: () => void
+  isDisabled?: boolean
+  onClick?: () => void
 }

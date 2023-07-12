@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
 
-import { getUsers } from './actions'
+import { fetchAllUsers } from './actions'
 import { User } from '@/types'
 
 type State = {
@@ -19,14 +19,14 @@ const { reducer } = createSlice({
   reducers: {},
   extraReducers: builder => {
     builder
-      .addCase(getUsers.pending, state => {
+      .addCase(fetchAllUsers.pending, state => {
         state.loading = true
       })
-      .addCase(getUsers.fulfilled, (state, { payload }) => {
+      .addCase(fetchAllUsers.fulfilled, (state, { payload }) => {
         state.data = payload
         state.loading = false
       })
-      .addCase(getUsers.rejected, state => {
+      .addCase(fetchAllUsers.rejected, state => {
         state.loading = false
       })
   },

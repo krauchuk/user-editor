@@ -1,7 +1,18 @@
 import { Props } from './types'
 
-const Button = ({ text, type = 'regular', variant = 'primary', onClick }: Props) => {
-  return <button onClick={onClick}>{text}</button>
+const Button = ({
+  text,
+  type = 'button',
+  variantType = 'regular',
+  variant = 'primary',
+  isDisabled,
+  onClick,
+}: Props) => {
+  return (
+    <button type={type} onClick={onClick} disabled={isDisabled}>
+      {text}
+    </button>
+  )
 }
 
 export default Button

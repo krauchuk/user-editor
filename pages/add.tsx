@@ -1,5 +1,10 @@
 import PageLayout from '@/components/PageLayout'
+import UserForm from '@/components/UserForm'
 
 export default function AddUserPage() {
-  return <PageLayout>Add user</PageLayout>
+  return (
+    <PageLayout>
+      <UserForm />
+    </PageLayout>
+  )
 }

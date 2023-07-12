@@ -1,6 +1,6 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { createSlice, isPending, isRejected, isFulfilled } from '@reduxjs/toolkit'
 
-import { getUser } from './actions'
+import { fetchUser, updateUser, createUser } from './actions'
 import { User } from '@/types'
 
 type State = {
@@ -18,17 +18,19 @@ const { reducer } = createSlice({
   initialState,
   reducers: {},
   extraReducers: builder => {
-    builder
-      .addCase(getUser.pending, state => {
+    builder.addCase(fetchUser.fulfilled, (state, { payload }) => {
+      state.data = payload
+      state.loading = false
+    })
+
+    builder.addMatcher(
+      isPending(fetchUser, createUser, updateUser) ||
+        isRejected(fetchUser, createUser, updateUser) ||
+        isFulfilled(fetchUser, createUser, updateUser),
+      state => {
         state.loading = true
-      })
-      .addCase(getUser.fulfilled, (state, { payload }) => {
-        state.data = payload
-        state.loading = false
-      })
-      .addCase(getUser.rejected, state => {
-        state.loading = false
-      })
+      },
+    )
   },
 })
 

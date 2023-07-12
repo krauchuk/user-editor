@@ -1,11 +1,14 @@
 import { Props } from './types'
 
-const Table = ({ title, columns, data }: Props) => {
+const Table = ({ title, columns, data, headerSlot }: Props) => {
   return (
     <table>
       <thead>
         <tr>
-          <th>{title}</th>
+          <th>
+            <h3>{title}</h3>
+            {headerSlot}
+          </th>
         </tr>
         <tr>
           {columns.map(column => (
