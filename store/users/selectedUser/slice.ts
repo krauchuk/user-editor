@@ -20,20 +20,18 @@ const { reducer } = createSlice({
   extraReducers: builder => {
     builder.addCase(fetchUser.fulfilled, (state, { payload }) => {
       state.data = payload
-      state.loading = false
     })
 
     builder
       .addMatcher(isPending(fetchUser, createUser, updateUser, deleteUser), state => {
         state.loading = true
       })
-      .addMatcher(
-        isRejected(fetchUser, createUser, updateUser, deleteUser) ||
-          isFulfilled(fetchUser, createUser, updateUser, deleteUser),
-        state => {
-          state.loading = false
-        },
-      )
+      .addMatcher(isFulfilled(fetchUser, createUser, updateUser, deleteUser), state => {
+        state.loading = false
+      })
+      .addMatcher(isRejected(fetchUser, createUser, updateUser, deleteUser), state => {
+        state.loading = false
+      })
   },
 })
 
