@@ -1,11 +1,9 @@
-import { useMemo, useLayoutEffect } from 'react'
+import { useLayoutEffect } from 'react'
 import { useRouter } from 'next/router'
 
 import AlertBanner from '@/components/AlertBanner'
 import PageLayout from '@/components/PageLayout'
-import Table from '@/components/Table'
 import Button from '@/components/Button'
-import { Column } from '@/components/Table/types'
 import Modal from '@/components/Modal'
 import { fetchAllUsers } from '@/store/users/allUsers/actions'
 import { getAllUsers } from '@/store/users/allUsers/selectors'
@@ -13,12 +11,10 @@ import { deleteUser } from '@/store/users/selectedUser/actions'
 import { useAppDispatch, useAppSelector } from '@/store/hooks'
 import { getUser } from '@/store/users/selectedUser/selectors'
 import useModal from '@/hooks/useModal'
-import { SortOrder, User } from '@/types'
-import { ModalButtons, TableButtons } from '@/styles/pages/homePage'
+import { ModalButtons } from '@/styles/pages/homePage'
 import { resetError as resetDeletionError } from '@/store/users/selectedUser/slice'
 import { setPageAlert } from '@/store/app/slice'
-import { sortUsers } from '@/store/users/allUsers/slice'
-import RefreshIcon from '@/icons/RefreshIcon'
+import UserTable from '@/components/UserTable'
 
 export default function HomePage() {
   const router = useRouter()
@@ -26,72 +22,6 @@ export default function HomePage() {
   const { data: allUsers, sort, loading, error: fetchError } = useAppSelector(getAllUsers)
   const { loading: currentUserLoading, error: deletionError } = useAppSelector(getUser)
   const deleteModal = useModal({ name: 'deleteModal', metadata: { userId: 0, name: '' } })
-
-  const columns: Column[] = useMemo(
-    () => [
-      {
-        name: 'Id',
-        key: 'id',
-        isSortable: true,
-        sortOrder: sort.field === 'id' ? sort.order : null,
-        onSort: () => dispatch(sortUsers({ field: 'id' })),
-      },
-      {
-        name: 'Name',
-        key: 'name',
-        isSortable: true,
-        sortOrder: sort.field === 'name' ? sort.order : null,
-        onSort: () => dispatch(sortUsers({ field: 'name' })),
-      },
-      {
-        name: 'Username',
-        key: 'username',
-        isSortable: true,
-        sortOrder: sort.field === 'username' ? sort.order : null,
-        onSort: () => dispatch(sortUsers({ field: 'username' })),
-      },
-      { name: 'Email', key: 'email' },
-      {
-        name: 'City',
-        key: 'city',
-        isSortable: true,
-        sortOrder: sort.field === 'city' ? sort.order : null,
-        onSort: () => dispatch(sortUsers({ field: 'city' })),
-      },
-      {
-        name: 'Edit',
-        cell: (row: User) => (
-          <>
-            <Button
-              text="edit"
-              variant="warning"
-              onClick={() => {
-                router.push(`/edit/${row.id}`)
-              }}
-            />
-          </>
-        ),
-      },
-      {
-        name: 'Delete',
-        cell: (row: User) => (
-          <Button
-            text="delete"
-            variant="danger"
-            onClick={() => {
-              deleteModal.setVisibility(true, { userId: row.id, name: row.name })
-            }}
-          />
-        ),
-      },
-    ],
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [sort],
-  )
-
-  const handleRefreshBtn = () => {
-    dispatch(fetchAllUsers())
-  }
 
   const handleDeleteBtn = async () => {
     try {
@@ -131,20 +61,14 @@ export default function HomePage() {
         <span>Do you want to delete user: {deleteModal.metadata.name}?</span>
       </Modal>
       {fetchError && <AlertBanner text={fetchError} type="danger" />}
-      <Table
-        title="User List"
-        rowKey="id"
-        columns={columns}
+      <UserTable
         data={allUsers}
-        headerSlot={
-          <TableButtons>
-            <Button text="Add new" onClick={() => router.push('/add')} />
-            <Button variant="secondary" onClick={handleRefreshBtn}>
-              <RefreshIcon />
-            </Button>
-          </TableButtons>
-        }
-        isLoading={loading}
+        sortData={sort}
+        loading={loading}
+        onAddClick={() => router.push('/add')}
+        onRefreshClick={() => dispatch(fetchAllUsers())}
+        onDeleteClick={row => deleteModal.setVisibility(true, { userId: row.id, name: row.name })}
+        onEditClick={row => router.push(`/edit/${row.id}`)}
       />
     </PageLayout>
   )

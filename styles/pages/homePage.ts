@@ -5,8 +5,3 @@ export const ModalButtons = styled('div')`
   justify-content: end;
   gap: 1rem;
 `
-
-export const TableButtons = styled('div')`
-  display: flex;
-  gap: 0.5rem;
-`

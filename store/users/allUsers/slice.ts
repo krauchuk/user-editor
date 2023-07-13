@@ -4,12 +4,14 @@ import { fetchAllUsers } from './actions'
 import { User, SortOrder } from '@/types'
 import { sortData } from '@/utils'
 
+export type Sort = {
+  field: keyof User
+  order: SortOrder
+}
+
 type State = {
   data: User[]
-  sort: {
-    field: keyof User
-    order: SortOrder
-  }
+  sort: Sort
   error: string | null
   loading: boolean
 }
