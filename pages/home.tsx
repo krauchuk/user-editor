@@ -14,10 +14,11 @@ import { useAppDispatch, useAppSelector } from '@/store/hooks'
 import { getUser } from '@/store/users/selectedUser/selectors'
 import useModal from '@/hooks/useModal'
 import { User } from '@/types'
-import { ModalButtons } from '@/styles/pages/homePage'
+import { ModalButtons, TableButtons } from '@/styles/pages/homePage'
 import { resetError as resetDeletionError } from '@/store/users/selectedUser/slice'
 import { setPageAlert } from '@/store/app/slice'
 import { sortUsers } from '@/store/users/allUsers/slice'
+import RefreshIcon from '@/icons/RefreshIcon'
 
 export default function HomePage() {
   const router = useRouter()
@@ -72,6 +73,10 @@ export default function HomePage() {
     [sort],
   )
 
+  const handleRefreshBtn = () => {
+    dispatch(fetchAllUsers())
+  }
+
   const handleDeleteBtn = async () => {
     try {
       await dispatch(deleteUser(deleteModal.metadata.userId)).unwrap()
@@ -115,7 +120,14 @@ export default function HomePage() {
         rowKey="id"
         columns={columns}
         data={allUsers}
-        headerSlot={<Button text="Add new" onClick={() => router.push('/add')} />}
+        headerSlot={
+          <TableButtons>
+            <Button text="Add new" onClick={() => router.push('/add')} />
+            <Button variant="secondary" onClick={handleRefreshBtn}>
+              <RefreshIcon />
+            </Button>
+          </TableButtons>
+        }
         isLoading={loading}
       />
     </PageLayout>

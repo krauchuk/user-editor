@@ -16,6 +16,8 @@ export const Button = styled('button')<ButtonProps>`
   border-color: ${props => Colors[props.variant]};
   background: ${props => (props.variantType === 'outline' ? 'white' : Colors[props.variant])};
   border-radius: 0.25rem;
+  display: flex;
+  align-items: center;
 
   :hover:not([disabled]) {
     background: ${props => (props.variantType === 'outline' ? Colors[props.variant] : 'white')};

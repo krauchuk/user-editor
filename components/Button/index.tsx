@@ -2,15 +2,16 @@ import { Props } from './types'
 import { Button } from './styles'
 
 const CustomButton = ({
-  text,
+  text = 'Click',
   type = 'button',
   variantType = 'regular',
   variant = 'primary',
   isDisabled,
+  children,
   onClick,
 }: Props) => (
   <Button type={type} onClick={onClick} disabled={isDisabled} variantType={variantType} variant={variant}>
-    {text}
+    {children || text}
   </Button>
 )
 
