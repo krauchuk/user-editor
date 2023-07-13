@@ -22,3 +22,7 @@ export const updateUser = createAsyncThunk('selectedUser/update', async (id: num
     ...data,
   }
 })
+
+export const deleteUser = createAsyncThunk('selectedUser/delete', async (id: number) => {
+  return null
+})

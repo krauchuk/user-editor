@@ -1,4 +1,5 @@
 import { useEffect } from 'react'
+import { useRouter } from 'next/router'
 import { useForm } from 'react-hook-form'
 import { useSelector } from 'react-redux'
 
@@ -10,6 +11,7 @@ import Button from '../Button'
 import { isEmailValid } from '@/utils'
 
 const UserForm = ({ isEditMode }: Props) => {
+  const router = useRouter()
   const { data: userData, loading } = useSelector(getUser)
   const { data: allUsers } = useSelector(getAllUsers)
 
@@ -17,7 +19,7 @@ const UserForm = ({ isEditMode }: Props) => {
     handleSubmit,
     register,
     reset,
-    formState: { errors, isSubmitting },
+    formState: { errors, isSubmitting, isDirty },
   } = useForm<FormInputs>({
     defaultValues: {
       name: '',
@@ -28,7 +30,7 @@ const UserForm = ({ isEditMode }: Props) => {
   })
 
   useEffect(() => {
-    if (!userData) return
+    if (!userData || !isEditMode) return
 
     reset({
       name: userData.name,
@@ -36,7 +38,7 @@ const UserForm = ({ isEditMode }: Props) => {
       email: userData.email,
       city: userData.city,
     })
-  }, [userData, reset])
+  }, [userData, reset, isEditMode])
 
   const onSubmit = (data: FormInputs) => console.log(data)
 
@@ -66,7 +68,14 @@ const UserForm = ({ isEditMode }: Props) => {
       <FormTextInput label="Username" error={errors.username} isDisabled={isDisabled} {...usernameField} />
       <FormTextInput label="Email" error={errors.email} isDisabled={isDisabled} {...emailField} />
       <FormTextInput label="City" error={errors.city} isDisabled={isDisabled} {...cityField} />
-      <Button type="submit" text="Submit" isDisabled={isDisabled} />
+      <Button
+        text="Cancel"
+        variant="danger"
+        variantType="outline"
+        onClick={() => router.push('/home')}
+        isDisabled={isDisabled}
+      />
+      <Button type="submit" variant="success" text="Submit" isDisabled={isDisabled || !isDirty} />
     </form>
   )
 }

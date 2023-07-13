@@ -1,6 +1,6 @@
 import { Props } from './types'
 
-const Table = ({ title, columns, data, headerSlot }: Props) => {
+const Table = ({ title, rowKey, columns, data, headerSlot }: Props) => {
   return (
     <table>
       <thead>
@@ -17,8 +17,8 @@ const Table = ({ title, columns, data, headerSlot }: Props) => {
         </tr>
       </thead>
       <tbody>
-        {data.map((row, rowIndex) => (
-          <tr key={rowIndex}>
+        {data.map(row => (
+          <tr key={row[rowKey]}>
             {columns.map((column, itemIndex) => {
               const content = column.cell ? column.cell(row) : row[column.key]
 

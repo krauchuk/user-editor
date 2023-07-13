@@ -1,6 +1,6 @@
 import { createSlice, isPending, isRejected, isFulfilled } from '@reduxjs/toolkit'
 
-import { fetchUser, updateUser, createUser } from './actions'
+import { fetchUser, updateUser, createUser, deleteUser } from './actions'
 import { User } from '@/types'
 
 type State = {
@@ -23,14 +23,17 @@ const { reducer } = createSlice({
       state.loading = false
     })
 
-    builder.addMatcher(
-      isPending(fetchUser, createUser, updateUser) ||
-        isRejected(fetchUser, createUser, updateUser) ||
-        isFulfilled(fetchUser, createUser, updateUser),
-      state => {
+    builder
+      .addMatcher(isPending(fetchUser, createUser, updateUser, deleteUser), state => {
         state.loading = true
-      },
-    )
+      })
+      .addMatcher(
+        isRejected(fetchUser, createUser, updateUser, deleteUser) ||
+          isFulfilled(fetchUser, createUser, updateUser, deleteUser),
+        state => {
+          state.loading = false
+        },
+      )
   },
 })
 

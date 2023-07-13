@@ -24,6 +24,7 @@ export type Column = {
 
 export type Props = {
   title: string
+  rowKey: string
   columns: Column[]
   data: Array<{ [key: string]: string | number }>
   headerSlot?: React.ReactNode
