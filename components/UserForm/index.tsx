@@ -5,7 +5,6 @@ import { useSelector } from 'react-redux'
 
 import { Props, FormValues } from './types'
 import { getUser } from '@/store/users/selectedUser/selectors'
-import { getAllUsers } from '@/store/users/allUsers/selectors'
 import { fetchAllUsers } from '@/store/users/allUsers/actions'
 import FormTextInput from '../FormTextInput'
 import Button from '../Button'
@@ -18,7 +17,6 @@ const UserForm = ({ isEditMode }: Props) => {
   const router = useRouter()
   const dispatch = useAppDispatch()
   const { data: userData, loading } = useSelector(getUser)
-  const { data: allUsers, loading: loadingAllUsers } = useSelector(getAllUsers)
 
   const {
     handleSubmit,
@@ -46,14 +44,16 @@ const UserForm = ({ isEditMode }: Props) => {
   }, [userData, reset, isEditMode])
 
   const onSubmit = async (data: FormValues) => {
-    if (isEditMode) {
-      await dispatch(updateUser({ id: userData!.id, data })).unwrap()
-    } else {
-      await dispatch(createUser(data)).unwrap()
-    }
+    try {
+      if (isEditMode) {
+        await dispatch(updateUser({ id: userData!.id, data })).unwrap()
+      } else {
+        await dispatch(createUser(data)).unwrap()
+      }
 
-    dispatch(fetchAllUsers())
-    router.push('/home')
+      dispatch(fetchAllUsers())
+      router.push('/home')
+    } catch (e) {}
   }
 
   const nameField = register('name', {
@@ -61,9 +61,7 @@ const UserForm = ({ isEditMode }: Props) => {
   })
   const usernameField = register('username', {
     required: { value: true, message: 'Username is required' },
-    validate: value =>
-      !allUsers.find(user => user.username.toLowerCase() === value.toLowerCase().trim() && userData?.id !== user.id) ||
-      'This name is already taken',
+    minLength: { value: 3, message: 'Must be at least 3 characters' },
   })
   const emailField = register('email', {
     required: { value: true, message: 'Email is required' },
@@ -73,7 +71,7 @@ const UserForm = ({ isEditMode }: Props) => {
     required: { value: true, message: 'City is required' },
   })
 
-  const isDisabled = loading || loadingAllUsers || isSubmitting
+  const isDisabled = loading || isSubmitting
 
   return (
     <Form onSubmit={handleSubmit(onSubmit)}>

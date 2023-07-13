@@ -5,18 +5,24 @@ import { User } from '@/types'
 
 type State = {
   data: User | null
+  error: string | null
   loading: boolean
 }
 
 const initialState: State = {
   data: null,
+  error: null,
   loading: false,
 }
 
-const { reducer } = createSlice({
+const { reducer, actions } = createSlice({
   name: 'selectedUser',
   initialState,
-  reducers: {},
+  reducers: {
+    resetError: state => {
+      state.error = null
+    },
+  },
   extraReducers: builder => {
     builder.addCase(fetchUser.fulfilled, (state, { payload }) => {
       state.data = payload
@@ -25,14 +31,17 @@ const { reducer } = createSlice({
     builder
       .addMatcher(isPending(fetchUser, createUser, updateUser, deleteUser), state => {
         state.loading = true
+        state.error = null
       })
       .addMatcher(isFulfilled(fetchUser, createUser, updateUser, deleteUser), state => {
         state.loading = false
       })
-      .addMatcher(isRejected(fetchUser, createUser, updateUser, deleteUser), state => {
+      .addMatcher(isRejected(fetchUser, createUser, updateUser, deleteUser), (state, { error }) => {
         state.loading = false
+        state.error = error.message || null
       })
   },
 })
 
 export default reducer
+export const { resetError } = actions

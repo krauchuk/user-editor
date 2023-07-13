@@ -9,7 +9,16 @@ export const fetcher = (url: string, options?: { method?: 'get' | 'post' | 'dele
       'Content-Type': 'application/json',
     },
     body: options?.data ? JSON.stringify(options.data) : null,
-  }).then(res => res.json())
+  })
+    .then(async res => {
+      if (res.status >= 200 && res.status < 300) {
+        return res
+      }
+
+      const result = await res.json()
+      throw new Error(result.message)
+    })
+    .then(res => res.json())
 
 export const sortData = <T>({ array, field, order }: { array: T[]; field: keyof T; order: SortOrder }): T[] =>
   array.sort((a, b) => {

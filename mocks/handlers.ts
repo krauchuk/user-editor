@@ -18,15 +18,43 @@ export const handlers = [
   }),
 
   rest.post('https://fake.api/users', async (req, res, ctx) => {
-    const users = createUser(await req.json())
+    const body = await req.json()
+    const isExist = db.users.findFirst({ where: { username: { equals: body.username.trim() } } })
 
-    return res(ctx.delay(), ctx.json(users))
+    if (isExist) {
+      return res(
+        ctx.delay(),
+        ctx.status(422),
+        ctx.json({
+          message: 'This name is already taken. Please choose another name',
+          code: 422,
+        }),
+      )
+    }
+
+    const user = createUser(body)
+
+    return res(ctx.delay(), ctx.json(user))
   }),
 
   rest.put('https://fake.api/users/:id', async (req, res, ctx) => {
+    const body = await req.json()
+    const isExist = db.users.findFirst({ where: { username: { equals: body.username.trim() } } })
+
+    if (isExist) {
+      return res(
+        ctx.delay(),
+        ctx.status(422),
+        ctx.json({
+          message: 'This name is already taken. Please choose another name',
+          code: 422,
+        }),
+      )
+    }
+
     const user = db.users.update({
       where: { id: { equals: +req.params.id } },
-      data: await req.json(),
+      data: body,
     })
 
     return res(ctx.delay(), ctx.json(user))
