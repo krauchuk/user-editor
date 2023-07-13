@@ -8,16 +8,18 @@ import { Column } from '@/components/Table/types'
 import Modal from '@/components/Modal'
 import { fetchAllUsers } from '@/store/users/allUsers/actions'
 import { getAllUsers } from '@/store/users/allUsers/selectors'
+import { sortUsers } from '@/store/users/allUsers/slice'
 import { deleteUser } from '@/store/users/selectedUser/actions'
 import { useAppDispatch, useAppSelector } from '@/store/hooks'
 import useModal from '@/hooks/useModal'
-import { User } from '@/types'
+import { User, SortOrder } from '@/types'
 
 export default function HomePage() {
   const router = useRouter()
   const dispatch = useAppDispatch()
-  const { data: allUsers } = useAppSelector(getAllUsers)
+  const { data: allUsers, sort } = useAppSelector(getAllUsers)
   const deleteModal = useModal({ name: 'deleteModal', metadata: { userId: 0, name: '' } })
+  console.log(sort)
 
   const columns: Column[] = useMemo(
     () => [
@@ -27,7 +29,10 @@ export default function HomePage() {
         name: 'Username',
         key: 'username',
         isSortable: true,
-        onSort: order => {},
+        sortOrder: sort.field === 'username' ? sort.order : null,
+        onSort: () => {
+          dispatch(sortUsers({ field: 'username', order: sort.order === 'asc' ? 'desc' : 'asc' }))
+        },
       },
       { name: 'Email', key: 'email' },
       { name: 'City', key: 'city' },
@@ -59,7 +64,7 @@ export default function HomePage() {
       },
     ],
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [],
+    [sort],
   )
 
   const handleDeleteBtn = () => {

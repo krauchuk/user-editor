@@ -1,6 +1,9 @@
+import { SortOrder } from '@/types'
+
 type SortableColumn = {
   isSortable: true
-  onSort: (order: 'asc' | 'desc') => void
+  sortOrder: SortOrder | null
+  onSort: () => void
 }
 
 type UnsortableColumn = {

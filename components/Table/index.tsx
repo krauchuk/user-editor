@@ -12,7 +12,9 @@ const Table = ({ title, rowKey, columns, data, headerSlot }: Props) => {
         </tr>
         <tr>
           {columns.map(column => (
-            <th key={column.name}>{column.name}</th>
+            <th key={column.name} onClick={column.isSortable ? column.onSort : undefined}>
+              {column.name}
+            </th>
           ))}
         </tr>
       </thead>

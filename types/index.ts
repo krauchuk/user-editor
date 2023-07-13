@@ -5,3 +5,5 @@ export type User = {
   email: string
   city: string
 }
+
+export type SortOrder = 'asc' | 'desc'
