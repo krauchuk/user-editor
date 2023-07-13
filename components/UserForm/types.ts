@@ -2,7 +2,7 @@ export type Props = {
   isEditMode?: boolean
 }
 
-export type FormInputs = {
+export type FormValues = {
   name: string
   username: string
   email: string

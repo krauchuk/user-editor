@@ -1,6 +1,7 @@
 import { createPortal } from 'react-dom'
 
 import { Props } from './types'
+import { Overlay, ModalContainer, ModalBody, ModalFooter, Backdrop } from './styles'
 
 const Modal = ({ title, isVisible, children, footerSlot }: Props) => {
   if (!isVisible) return null
@@ -8,13 +9,14 @@ const Modal = ({ title, isVisible, children, footerSlot }: Props) => {
   return (
     <>
       {createPortal(
-        <div>
-          <div>
+        <Overlay>
+          <Backdrop />
+          <ModalContainer>
             <h3>{title}</h3>
-            <div>{children}</div>
-            {footerSlot && <div>{footerSlot}</div>}
-          </div>
-        </div>,
+            <ModalBody>{children}</ModalBody>
+            {footerSlot && <ModalFooter>{footerSlot}</ModalFooter>}
+          </ModalContainer>
+        </Overlay>,
         document.body,
       )}
     </>

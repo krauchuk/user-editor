@@ -19,7 +19,6 @@ export default function HomePage() {
   const dispatch = useAppDispatch()
   const { data: allUsers, sort } = useAppSelector(getAllUsers)
   const deleteModal = useModal({ name: 'deleteModal', metadata: { userId: 0, name: '' } })
-  console.log(sort)
 
   const columns: Column[] = useMemo(
     () => [

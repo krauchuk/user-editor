@@ -1,13 +1,13 @@
 import Link from 'next/link'
 
-const Header = () => {
-  return (
-    <header>
-      <nav>
-        <Link href="/home">Home</Link>
-      </nav>
-    </header>
-  )
-}
+import { Header } from './styles'
 
-export default Header
+const CustomHeader = () => (
+  <Header>
+    <nav>
+      <Link href="/home">Home</Link>
+    </nav>
+  </Header>
+)
+
+export default CustomHeader

@@ -1,11 +1,12 @@
 import Header from '../Header'
 
 import { Props } from './types'
+import { Main } from './styles'
 
 const Layout = ({ children }: Props) => (
   <>
     <Header />
-    <main>{children}</main>
+    <Main>{children}</Main>
   </>
 )
 

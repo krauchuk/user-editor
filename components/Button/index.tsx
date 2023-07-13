@@ -1,18 +1,17 @@
 import { Props } from './types'
+import { Button } from './styles'
 
-const Button = ({
+const CustomButton = ({
   text,
   type = 'button',
   variantType = 'regular',
   variant = 'primary',
   isDisabled,
   onClick,
-}: Props) => {
-  return (
-    <button type={type} onClick={onClick} disabled={isDisabled}>
-      {text}
-    </button>
-  )
-}
+}: Props) => (
+  <Button type={type} onClick={onClick} disabled={isDisabled} variantType={variantType} variant={variant}>
+    {text}
+  </Button>
+)
 
-export default Button
+export default CustomButton

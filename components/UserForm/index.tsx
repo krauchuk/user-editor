@@ -3,7 +3,7 @@ import { useRouter } from 'next/router'
 import { useForm } from 'react-hook-form'
 import { useSelector } from 'react-redux'
 
-import { Props, FormInputs } from './types'
+import { Props, FormValues } from './types'
 import { getUser } from '@/store/users/selectedUser/selectors'
 import { getAllUsers } from '@/store/users/allUsers/selectors'
 import FormTextInput from '../FormTextInput'
@@ -11,6 +11,7 @@ import Button from '../Button'
 import { isEmailValid } from '@/utils'
 import { useAppDispatch } from '@/store/hooks'
 import { updateUser, createUser } from '@/store/users/selectedUser/actions'
+import { Form, FormInputs, FormButtons } from './styles'
 
 const UserForm = ({ isEditMode }: Props) => {
   const router = useRouter()
@@ -23,7 +24,7 @@ const UserForm = ({ isEditMode }: Props) => {
     register,
     reset,
     formState: { errors, isSubmitting, isDirty },
-  } = useForm<FormInputs>({
+  } = useForm<FormValues>({
     defaultValues: {
       name: '',
       username: '',
@@ -43,7 +44,7 @@ const UserForm = ({ isEditMode }: Props) => {
     })
   }, [userData, reset, isEditMode])
 
-  const onSubmit = async (data: FormInputs) => {
+  const onSubmit = async (data: FormValues) => {
     if (isEditMode) {
       await dispatch(updateUser({ id: userData!.id, data })).unwrap()
     } else {
@@ -73,21 +74,25 @@ const UserForm = ({ isEditMode }: Props) => {
   const isDisabled = (isEditMode && loading) || isSubmitting
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <Form onSubmit={handleSubmit(onSubmit)}>
       <h2>{isEditMode ? 'Edit Form' : 'Add Form'}</h2>
-      <FormTextInput label="Name" error={errors.name} isDisabled={isDisabled} {...nameField} />
-      <FormTextInput label="Username" error={errors.username} isDisabled={isDisabled} {...usernameField} />
-      <FormTextInput label="Email" error={errors.email} isDisabled={isDisabled} {...emailField} />
-      <FormTextInput label="City" error={errors.city} isDisabled={isDisabled} {...cityField} />
-      <Button
-        text="Cancel"
-        variant="danger"
-        variantType="outline"
-        onClick={() => router.push('/home')}
-        isDisabled={isDisabled}
-      />
-      <Button type="submit" variant="success" text="Submit" isDisabled={isDisabled || !isDirty} />
-    </form>
+      <FormInputs>
+        <FormTextInput label="Name" error={errors.name} isDisabled={isDisabled} {...nameField} />
+        <FormTextInput label="Username" error={errors.username} isDisabled={isDisabled} {...usernameField} />
+        <FormTextInput label="Email" error={errors.email} isDisabled={isDisabled} {...emailField} />
+        <FormTextInput label="City" error={errors.city} isDisabled={isDisabled} {...cityField} />
+      </FormInputs>
+      <FormButtons>
+        <Button
+          text="Cancel"
+          variant="danger"
+          variantType="outline"
+          onClick={() => router.push('/home')}
+          isDisabled={isDisabled}
+        />
+        <Button type="submit" variant="success" text="Submit" isDisabled={isDisabled || !isDirty} />
+      </FormButtons>
+    </Form>
   )
 }
 

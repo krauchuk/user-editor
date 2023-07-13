@@ -1,8 +1,14 @@
+import { Colors } from '@/styles/colors'
+
+export type BtnVariant = keyof typeof Colors
+
+export type BtnVariantType = 'regular' | 'outline'
+
 export type Props = {
   text: string
   type?: 'button' | 'submit' | 'reset'
-  variantType?: 'regular' | 'outline'
-  variant?: 'primary' | 'secondary' | 'success' | 'danger' | 'warning'
+  variantType?: BtnVariantType
+  variant?: BtnVariant
   isDisabled?: boolean
   onClick?: () => void
 }

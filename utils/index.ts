@@ -11,9 +11,15 @@ export const fetcher = (url: string, options?: { method?: 'get' | 'post' | 'dele
     body: options?.data ? JSON.stringify(options.data) : null,
   }).then(res => res.json())
 
-export const sortData = <T>({ array, field, order }: { array: T[]; field: keyof T; order: SortOrder }) =>
+export const sortData = <T>({ array, field, order }: { array: T[]; field: keyof T; order: SortOrder }): T[] =>
   array.sort((a, b) => {
-    if (a[field] < b[field]) return order === 'asc' ? -1 : 1
-    if (a[field] > b[field]) return order === 'asc' ? 1 : -1
+    const first = a[field]
+    const second = b[field]
+    const firstVal = typeof first === 'string' ? first.toLowerCase() : first
+    const secondVal = typeof second === 'string' ? second.toLowerCase() : second
+
+    if (firstVal < secondVal) return order === 'asc' ? -1 : 1
+    if (firstVal > secondVal) return order === 'asc' ? 1 : -1
+
     return 0
   })
