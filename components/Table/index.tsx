@@ -1,6 +1,7 @@
 import { Props } from './types'
 import { Container, Table, TableHeader, HeadCell, Chevron, TableWrapper, Loader, LoaderText } from './styles'
-import ChevronDown from '@/icons/ChevronDown'
+import ChevronDownIcon from '@/icons/ChevronDownIcon'
+import MinusIcon from '@/icons/MinusIcon'
 
 const CustomTable = ({ title, rowKey, columns, data, headerSlot, isLoading = false }: Props) => (
   <Container>
@@ -29,7 +30,7 @@ const CustomTable = ({ title, rowKey, columns, data, headerSlot, isLoading = fal
                   <HeadCell>
                     {name}
                     <Chevron sortOrder={isSortable ? column.sortOrder : null}>
-                      {isSortable && column.sortOrder && <ChevronDown />}
+                      {isSortable && (column.sortOrder ? <ChevronDownIcon /> : <MinusIcon />)}
                     </Chevron>
                   </HeadCell>
                 </th>
