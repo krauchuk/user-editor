@@ -31,4 +31,5 @@ export type Props = {
   columns: Column[]
   data: Array<{ [key: string]: string | number }>
   headerSlot?: React.ReactNode
+  isLoading?: boolean
 }

@@ -17,7 +17,7 @@ import { User, SortOrder } from '@/types'
 export default function HomePage() {
   const router = useRouter()
   const dispatch = useAppDispatch()
-  const { data: allUsers, sort } = useAppSelector(getAllUsers)
+  const { data: allUsers, sort, loading } = useAppSelector(getAllUsers)
   const deleteModal = useModal({ name: 'deleteModal', metadata: { userId: 0, name: '' } })
 
   const columns: Column[] = useMemo(
@@ -73,7 +73,8 @@ export default function HomePage() {
   }
 
   useEffect(() => {
-    dispatch(fetchAllUsers())
+    if (!allUsers.length) dispatch(fetchAllUsers())
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch])
 
   return (
@@ -96,6 +97,7 @@ export default function HomePage() {
         columns={columns}
         data={allUsers}
         headerSlot={<Button text="Add new" onClick={() => router.push('/add')} />}
+        isLoading={loading}
       />
     </PageLayout>
   )

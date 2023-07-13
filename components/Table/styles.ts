@@ -8,7 +8,7 @@ type ChevronProps = {
   sortOrder: SortOrder | null
 }
 
-export const TableContainer = styled('div')`
+export const Container = styled('div')`
   margin: auto;
   background: white;
   border: 1px solid ${styleConst.borderColor};
@@ -37,6 +37,10 @@ export const Table = styled('table')`
   }
 `
 
+export const TableWrapper = styled('div')`
+  position: relative;
+`
+
 export const TableHeader = styled('div')`
   border-bottom: 1px solid ${styleConst.borderColor};
   display: flex;
@@ -58,4 +62,23 @@ export const Chevron = styled('div')<ChevronProps>`
     width: 15px;
     transform: ${props => (props.sortOrder === 'asc' ? 'scaleY(1)' : 'scaleY(-1)')};
   }
+`
+
+export const Loader = styled('div')`
+  position: absolute;
+  background: black;
+  opacity: 0.5;
+  top: 1rem;
+  bottom: 1rem;
+  right: 1rem;
+  left: 1rem;
+`
+
+export const LoaderText = styled('div')`
+  color: white;
+  font-weight: bold;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 `

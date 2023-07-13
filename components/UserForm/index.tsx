@@ -6,6 +6,7 @@ import { useSelector } from 'react-redux'
 import { Props, FormValues } from './types'
 import { getUser } from '@/store/users/selectedUser/selectors'
 import { getAllUsers } from '@/store/users/allUsers/selectors'
+import { fetchAllUsers } from '@/store/users/allUsers/actions'
 import FormTextInput from '../FormTextInput'
 import Button from '../Button'
 import { isEmailValid } from '@/utils'
@@ -17,7 +18,7 @@ const UserForm = ({ isEditMode }: Props) => {
   const router = useRouter()
   const dispatch = useAppDispatch()
   const { data: userData, loading } = useSelector(getUser)
-  const { data: allUsers } = useSelector(getAllUsers)
+  const { data: allUsers, loading: loadingAllUsers } = useSelector(getAllUsers)
 
   const {
     handleSubmit,
@@ -51,6 +52,7 @@ const UserForm = ({ isEditMode }: Props) => {
       await dispatch(createUser(data)).unwrap()
     }
 
+    dispatch(fetchAllUsers())
     router.push('/home')
   }
 
@@ -71,7 +73,7 @@ const UserForm = ({ isEditMode }: Props) => {
     required: { value: true, message: 'City is required' },
   })
 
-  const isDisabled = (isEditMode && loading) || isSubmitting
+  const isDisabled = loading || loadingAllUsers || isSubmitting
 
   return (
     <Form onSubmit={handleSubmit(onSubmit)}>
