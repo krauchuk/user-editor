@@ -16,7 +16,7 @@ import { User } from '@/types'
 export default function HomePage() {
   const router = useRouter()
   const dispatch = useAppDispatch()
-  const { data: allUsers, loading } = useAppSelector(getAllUsers)
+  const { data: allUsers } = useAppSelector(getAllUsers)
   const deleteModal = useModal({ name: 'deleteModal', metadata: { userId: 0, name: '' } })
 
   const columns: Column[] = useMemo(
@@ -71,10 +71,6 @@ export default function HomePage() {
   useEffect(() => {
     dispatch(fetchAllUsers())
   }, [dispatch])
-
-  if (loading) {
-    return <div>Loading</div>
-  }
 
   return (
     <PageLayout>

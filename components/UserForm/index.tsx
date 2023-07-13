@@ -9,9 +9,12 @@ import { getAllUsers } from '@/store/users/allUsers/selectors'
 import FormTextInput from '../FormTextInput'
 import Button from '../Button'
 import { isEmailValid } from '@/utils'
+import { useAppDispatch } from '@/store/hooks'
+import { updateUser, createUser } from '@/store/users/selectedUser/actions'
 
 const UserForm = ({ isEditMode }: Props) => {
   const router = useRouter()
+  const dispatch = useAppDispatch()
   const { data: userData, loading } = useSelector(getUser)
   const { data: allUsers } = useSelector(getAllUsers)
 
@@ -40,7 +43,15 @@ const UserForm = ({ isEditMode }: Props) => {
     })
   }, [userData, reset, isEditMode])
 
-  const onSubmit = (data: FormInputs) => console.log(data)
+  const onSubmit = async (data: FormInputs) => {
+    if (isEditMode) {
+      await dispatch(updateUser({ id: userData!.id, data })).unwrap()
+    } else {
+      await dispatch(createUser(data)).unwrap()
+    }
+
+    router.push('/home')
+  }
 
   const nameField = register('name', {
     required: { value: true, message: 'Name is required' },
@@ -48,7 +59,7 @@ const UserForm = ({ isEditMode }: Props) => {
   const usernameField = register('username', {
     required: { value: true, message: 'Username is required' },
     validate: value =>
-      !allUsers.find(user => user.username.toLowerCase() === value.toLowerCase().trim()) ||
+      !allUsers.find(user => user.username.toLowerCase() === value.toLowerCase().trim() && userData?.id !== user.id) ||
       'This name is already taken',
   })
   const emailField = register('email', {
@@ -59,7 +70,7 @@ const UserForm = ({ isEditMode }: Props) => {
     required: { value: true, message: 'City is required' },
   })
 
-  const isDisabled = loading || isSubmitting
+  const isDisabled = (isEditMode && loading) || isSubmitting
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
