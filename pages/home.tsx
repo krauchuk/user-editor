@@ -13,7 +13,7 @@ import { deleteUser } from '@/store/users/selectedUser/actions'
 import { useAppDispatch, useAppSelector } from '@/store/hooks'
 import { getUser } from '@/store/users/selectedUser/selectors'
 import useModal from '@/hooks/useModal'
-import { User } from '@/types'
+import { SortOrder, User } from '@/types'
 import { ModalButtons, TableButtons } from '@/styles/pages/homePage'
 import { resetError as resetDeletionError } from '@/store/users/selectedUser/slice'
 import { setPageAlert } from '@/store/app/slice'
@@ -29,19 +29,35 @@ export default function HomePage() {
 
   const columns: Column[] = useMemo(
     () => [
-      { name: 'Id', key: 'id' },
-      { name: 'Name', key: 'name' },
+      {
+        name: 'Id',
+        key: 'id',
+        isSortable: true,
+        sortOrder: sort.field === 'id' ? sort.order : null,
+        onSort: () => dispatch(sortUsers({ field: 'id' })),
+      },
+      {
+        name: 'Name',
+        key: 'name',
+        isSortable: true,
+        sortOrder: sort.field === 'name' ? sort.order : null,
+        onSort: () => dispatch(sortUsers({ field: 'name' })),
+      },
       {
         name: 'Username',
         key: 'username',
         isSortable: true,
         sortOrder: sort.field === 'username' ? sort.order : null,
-        onSort: () => {
-          dispatch(sortUsers({ field: 'username', order: sort.order === 'asc' ? 'desc' : 'asc' }))
-        },
+        onSort: () => dispatch(sortUsers({ field: 'username' })),
       },
       { name: 'Email', key: 'email' },
-      { name: 'City', key: 'city' },
+      {
+        name: 'City',
+        key: 'city',
+        isSortable: true,
+        sortOrder: sort.field === 'city' ? sort.order : null,
+        onSort: () => dispatch(sortUsers({ field: 'city' })),
+      },
       {
         name: 'Edit',
         cell: (row: User) => (

@@ -28,10 +28,16 @@ const { reducer, actions } = createSlice({
   name: 'allUsers',
   initialState,
   reducers: {
-    sortUsers: (state, { payload }: PayloadAction<{ field: keyof User; order: SortOrder }>) => {
+    sortUsers: (state, { payload }: PayloadAction<{ field: keyof User; order?: SortOrder }>) => {
+      let newOrderValue: SortOrder = state.sort.order === 'asc' ? 'desc' : 'asc'
+
+      if (state.sort.field !== payload.field) {
+        newOrderValue = 'asc'
+      }
+
       state.sort.field = payload.field
-      state.sort.order = payload.order
-      state.data = sortData({ array: state.data, field: payload.field, order: payload.order })
+      state.sort.order = payload.order || newOrderValue
+      state.data = sortData({ array: state.data, field: payload.field, order: payload.order || newOrderValue })
     },
   },
   extraReducers: builder => {
