@@ -1,6 +1,6 @@
 # user-editor
 
-Simplest user editor. Example without using `useState``, only redux-toolkit
+Simplest user editor. Example without using `useState`, only redux-toolkit
 
 ## Development
 
