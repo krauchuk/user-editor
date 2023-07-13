@@ -8,7 +8,7 @@ import store from '@/store'
 
 const env = process.env.NODE_ENV
 
-if (env == 'development') {
+if (env === 'development') {
   require('../mocks')
 }
 
