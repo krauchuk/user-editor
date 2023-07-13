@@ -38,7 +38,7 @@ const { reducer, actions } = createSlice({
       })
       .addMatcher(isRejected(fetchUser, createUser, updateUser, deleteUser), (state, { error }) => {
         state.loading = false
-        state.error = error.message || null
+        state.error = error.message || 'Something went wrong'
       })
   },
 })

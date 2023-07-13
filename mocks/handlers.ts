@@ -19,7 +19,7 @@ export const handlers = [
 
   rest.post('https://fake.api/users', async (req, res, ctx) => {
     const body = await req.json()
-    const isExist = db.users.findFirst({ where: { username: { equals: body.username.trim() } } })
+    const isExist = !!db.users.findFirst({ where: { username: { equals: body.username.trim() } } })
 
     if (isExist) {
       return res(
@@ -39,9 +39,9 @@ export const handlers = [
 
   rest.put('https://fake.api/users/:id', async (req, res, ctx) => {
     const body = await req.json()
-    const isExist = db.users.findFirst({ where: { username: { equals: body.username.trim() } } })
+    const searchedUser = db.users.findFirst({ where: { username: { equals: body.username.trim() } } })
 
-    if (isExist) {
+    if (searchedUser && searchedUser.id !== +req.params.id) {
       return res(
         ctx.delay(),
         ctx.status(422),
@@ -65,6 +65,6 @@ export const handlers = [
       where: { id: { equals: +req.params.id } },
     })
 
-    return res(ctx.delay(), ctx.status(200))
+    return res(ctx.delay(), ctx.status(200), ctx.json({ ok: true }))
   }),
 ]

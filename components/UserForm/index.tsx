@@ -12,6 +12,7 @@ import { isEmailValid } from '@/utils'
 import { useAppDispatch } from '@/store/hooks'
 import { updateUser, createUser } from '@/store/users/selectedUser/actions'
 import { Form, FormInputs, FormButtons } from './styles'
+import { setPageAlert } from '@/store/app/slice'
 
 const UserForm = ({ isEditMode }: Props) => {
   const router = useRouter()
@@ -52,7 +53,16 @@ const UserForm = ({ isEditMode }: Props) => {
       }
 
       dispatch(fetchAllUsers())
-      router.push('/home')
+      router
+        .push('/home')
+        .then(() =>
+          dispatch(
+            setPageAlert({
+              type: 'success',
+              text: isEditMode ? 'User was successfully updated' : 'User was successfully added',
+            }),
+          ),
+        )
     } catch (e) {}
   }
 

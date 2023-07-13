@@ -1,6 +1,7 @@
-import { useEffect, useMemo } from 'react'
+import { useMemo, useLayoutEffect } from 'react'
 import { useRouter } from 'next/router'
 
+import AlertBanner from '@/components/AlertBanner'
 import PageLayout from '@/components/PageLayout'
 import Table from '@/components/Table'
 import Button from '@/components/Button'
@@ -8,16 +9,21 @@ import { Column } from '@/components/Table/types'
 import Modal from '@/components/Modal'
 import { fetchAllUsers } from '@/store/users/allUsers/actions'
 import { getAllUsers } from '@/store/users/allUsers/selectors'
-import { sortUsers } from '@/store/users/allUsers/slice'
 import { deleteUser } from '@/store/users/selectedUser/actions'
 import { useAppDispatch, useAppSelector } from '@/store/hooks'
+import { getUser } from '@/store/users/selectedUser/selectors'
 import useModal from '@/hooks/useModal'
-import { User, SortOrder } from '@/types'
+import { User } from '@/types'
+import { ModalButtons } from '@/styles/pages/homePage'
+import { resetError as resetDeletionError } from '@/store/users/selectedUser/slice'
+import { setPageAlert } from '@/store/app/slice'
+import { sortUsers } from '@/store/users/allUsers/slice'
 
 export default function HomePage() {
   const router = useRouter()
   const dispatch = useAppDispatch()
-  const { data: allUsers, sort, loading } = useAppSelector(getAllUsers)
+  const { data: allUsers, sort, loading, error: fetchError } = useAppSelector(getAllUsers)
+  const { loading: currentUserLoading, error: deletionError } = useAppSelector(getUser)
   const deleteModal = useModal({ name: 'deleteModal', metadata: { userId: 0, name: '' } })
 
   const columns: Column[] = useMemo(
@@ -66,13 +72,24 @@ export default function HomePage() {
     [sort],
   )
 
-  const handleDeleteBtn = () => {
-    dispatch(deleteUser(deleteModal.metadata.userId))
-    dispatch(fetchAllUsers())
-    deleteModal.setVisibility(false)
+  const handleDeleteBtn = async () => {
+    try {
+      await dispatch(deleteUser(deleteModal.metadata.userId)).unwrap()
+
+      dispatch(fetchAllUsers())
+      deleteModal.setVisibility(false)
+      dispatch(
+        setPageAlert({ type: 'success', text: `User [${deleteModal.metadata.name}] has been successfully deleted` }),
+      )
+    } catch (e) {}
   }
 
-  useEffect(() => {
+  const handleCloseBtn = () => {
+    deleteModal.setVisibility(false)
+    dispatch(resetDeletionError())
+  }
+
+  useLayoutEffect(() => {
     if (!allUsers.length) dispatch(fetchAllUsers())
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch])
@@ -83,14 +100,16 @@ export default function HomePage() {
         title="Delete"
         isVisible={deleteModal.isVisible}
         footerSlot={
-          <div>
-            <Button text="Cancel" variant="secondary" onClick={() => deleteModal.setVisibility(false)} />
-            <Button text="Delete" variant="danger" onClick={handleDeleteBtn} />
-          </div>
+          <ModalButtons>
+            <Button text="Cancel" variant="secondary" onClick={handleCloseBtn} />
+            <Button text="Delete" variant="danger" isDisabled={currentUserLoading} onClick={handleDeleteBtn} />
+          </ModalButtons>
         }
       >
+        {deletionError && <AlertBanner text={deletionError} type="danger" />}
         <span>Do you want to delete user: {deleteModal.metadata.name}?</span>
       </Modal>
+      {fetchError && <AlertBanner text={fetchError} type="danger" />}
       <Table
         title="User List"
         rowKey="id"

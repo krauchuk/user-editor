@@ -1,7 +1,7 @@
 import { useEffect, useLayoutEffect } from 'react'
 import { useRouter } from 'next/router'
 
-import ErrorBanner from '@/components/ErrorBanner'
+import ErrorBanner from '@/components/AlertBanner'
 import PageLayout from '@/components/PageLayout'
 import UserForm from '@/components/UserForm'
 import { fetchUser } from '@/store/users/selectedUser/actions'
@@ -17,6 +17,10 @@ export default function EditUserPage() {
 
   useLayoutEffect(() => {
     dispatch(resetError())
+
+    return () => {
+      dispatch(resetError())
+    }
   }, [dispatch])
 
   useEffect(() => {
@@ -25,8 +29,8 @@ export default function EditUserPage() {
 
   return (
     <PageLayout>
-      {error && <ErrorBanner text={error} />}
       <UserForm isEditMode />
+      {error && <ErrorBanner text={error} type="danger" />}
     </PageLayout>
   )
 }

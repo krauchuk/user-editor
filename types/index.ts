@@ -7,3 +7,5 @@ export type User = {
 }
 
 export type SortOrder = 'asc' | 'desc'
+
+export type AlertType = 'success' | 'danger'

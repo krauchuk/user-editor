@@ -1,6 +1,6 @@
 import { useLayoutEffect } from 'react'
 
-import ErrorBanner from '@/components/ErrorBanner'
+import ErrorBanner from '@/components/AlertBanner'
 import PageLayout from '@/components/PageLayout'
 import UserForm from '@/components/UserForm'
 import { useAppDispatch, useAppSelector } from '@/store/hooks'
@@ -13,12 +13,16 @@ export default function AddUserPage() {
 
   useLayoutEffect(() => {
     dispatch(resetError())
+
+    return () => {
+      dispatch(resetError())
+    }
   }, [dispatch])
 
   return (
     <PageLayout>
-      {error && <ErrorBanner text={error} />}
       <UserForm />
+      {error && <ErrorBanner text={error} type="danger" />}
     </PageLayout>
   )
 }

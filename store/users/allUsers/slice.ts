@@ -10,6 +10,7 @@ type State = {
     field: keyof User
     order: SortOrder
   }
+  error: string | null
   loading: boolean
 }
 
@@ -19,6 +20,7 @@ const initialState: State = {
     field: 'id',
     order: 'asc',
   },
+  error: null,
   loading: false,
 }
 
@@ -36,13 +38,15 @@ const { reducer, actions } = createSlice({
     builder
       .addCase(fetchAllUsers.pending, state => {
         state.loading = true
+        state.error = null
       })
       .addCase(fetchAllUsers.fulfilled, (state, { payload }) => {
         state.data = sortData({ array: payload, field: state.sort.field, order: state.sort.order })
         state.loading = false
       })
-      .addCase(fetchAllUsers.rejected, state => {
+      .addCase(fetchAllUsers.rejected, (state, { error }) => {
         state.loading = false
+        state.error = error.message || 'Something went wrong'
       })
   },
 })
