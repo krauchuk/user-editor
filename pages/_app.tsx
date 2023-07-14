@@ -6,9 +6,7 @@ import { Global } from '@emotion/react'
 import { GlobalStyles } from '@/styles/globals'
 import store from '@/store'
 
-const env = process.env.NODE_ENV
-
-if (env === 'development') {
+if (process.env.NODE_ENV === 'development') {
   require('../mocks')
 }
 

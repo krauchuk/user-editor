@@ -32,7 +32,11 @@ export default function HomePage() {
       dispatch(
         setPageAlert({ type: 'success', text: `User [${deleteModal.metadata.name}] has been successfully deleted` }),
       )
-    } catch (e) {}
+    } catch (e) {
+      // TODO: add logger
+      const message = e instanceof Error ? e.message : 'Something went wrong when deleting the user'
+      console.error(message)
+    }
   }
 
   const handleCloseBtn = () => {
@@ -49,7 +53,7 @@ export default function HomePage() {
     <PageLayout>
       <Modal
         title="Delete"
-        isVisible={deleteModal.isVisible}
+        isOpen={deleteModal.isOpen}
         footerSlot={
           <ModalButtons>
             <Button text="Cancel" variant="secondary" onClick={handleCloseBtn} />

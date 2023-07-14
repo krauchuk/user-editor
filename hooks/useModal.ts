@@ -13,8 +13,8 @@ const useModal = <T>({ name, metadata }: Params<T>) => {
 
   return {
     setVisibility: (value: boolean, metadata?: T) =>
-      dispatch(changeModalVisibility({ modal: name, isVisible: value, metadata: metadata || {} })),
-    isVisible: modalData[name].isVisible,
+      dispatch(changeModalVisibility({ modal: name, isOpen: value, metadata: metadata || {} })),
+    isOpen: modalData[name].isOpen,
     metadata: modalData[name].metadata as T,
   }
 }

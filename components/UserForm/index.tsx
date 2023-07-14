@@ -53,17 +53,20 @@ const UserForm = ({ isEditMode }: Props) => {
       }
 
       dispatch(fetchAllUsers())
-      router
-        .push('/home')
-        .then(() =>
-          dispatch(
-            setPageAlert({
-              type: 'success',
-              text: isEditMode ? 'User was successfully updated' : 'User was successfully added',
-            }),
-          ),
-        )
-    } catch (e) {}
+      router.push('/home').then(() =>
+        dispatch(
+          setPageAlert({
+            type: 'success',
+            text: isEditMode ? 'User was successfully updated' : 'User was successfully added',
+          }),
+        ),
+      )
+    } catch (e) {
+      // TODO: add logger
+      const message =
+        e instanceof Error ? e.message : `Something went wrong when ${isEditMode ? 'updating' : 'creating'} the user`
+      console.error(message)
+    }
   }
 
   const nameField = register('name', {

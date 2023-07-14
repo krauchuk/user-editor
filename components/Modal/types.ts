@@ -1,6 +1,6 @@
 export type Props = {
   title: string
-  isVisible: boolean
+  isOpen: boolean
   children: React.ReactNode
   footerSlot?: React.ReactNode
 }

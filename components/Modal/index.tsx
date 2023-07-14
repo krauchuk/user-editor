@@ -3,8 +3,8 @@ import { createPortal } from 'react-dom'
 import { Props } from './types'
 import { Overlay, ModalContainer, ModalBody, ModalFooter, Backdrop } from './styles'
 
-const Modal = ({ title, isVisible, children, footerSlot }: Props) => {
-  if (!isVisible) return null
+const Modal = ({ title, isOpen, children, footerSlot }: Props) => {
+  if (!isOpen) return null
 
   return (
     <>
