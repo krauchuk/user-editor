@@ -1,5 +1,5 @@
 import { useAppDispatch, useAppSelector } from '@/store/hooks'
-import { getAllModalData } from '@/store/modals/selectors'
+import { selectModals } from '@/store/modals/selectors'
 import { State, changeModalVisibility } from '@/store/modals/slice'
 
 type Params<T> = {
@@ -9,7 +9,7 @@ type Params<T> = {
 
 const useModal = <T>({ name, metadata }: Params<T>) => {
   const dispatch = useAppDispatch()
-  const modalData = useAppSelector(getAllModalData)
+  const modalData = useAppSelector(selectModals)
 
   return {
     setVisibility: (value: boolean, metadata?: T) =>

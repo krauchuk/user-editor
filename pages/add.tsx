@@ -4,12 +4,12 @@ import ErrorBanner from '@/components/AlertBanner'
 import PageLayout from '@/components/PageLayout'
 import UserForm from '@/components/UserForm'
 import { useAppDispatch, useAppSelector } from '@/store/hooks'
-import { getUser } from '@/store/users/selectedUser/selectors'
-import { resetError } from '@/store/users/selectedUser/slice'
+import { selectUserError } from '@/store/user/selectors'
+import { resetError } from '@/store/user/slice'
 
 export default function AddUserPage() {
   const dispatch = useAppDispatch()
-  const { error } = useAppSelector(getUser)
+  const error = useAppSelector(selectUserError)
 
   useLayoutEffect(() => {
     dispatch(resetError())

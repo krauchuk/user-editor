@@ -10,14 +10,14 @@ export type Sort = {
 }
 
 type State = {
-  data: User[]
+  users: User[]
   sort: Sort
   error: string | null
   loading: boolean
 }
 
 const initialState: State = {
-  data: [],
+  users: [],
   sort: {
     field: 'id',
     order: 'asc',
@@ -27,7 +27,7 @@ const initialState: State = {
 }
 
 const { reducer, actions } = createSlice({
-  name: 'allUsers',
+  name: 'users',
   initialState,
   reducers: {
     sortUsers: (state, { payload }: PayloadAction<{ field: keyof User; order?: SortOrder }>) => {
@@ -39,7 +39,7 @@ const { reducer, actions } = createSlice({
 
       state.sort.field = payload.field
       state.sort.order = payload.order || newOrderValue
-      state.data = sortData({ array: state.data, field: payload.field, order: payload.order || newOrderValue })
+      state.users = sortData({ array: state.users, field: payload.field, order: payload.order || newOrderValue })
     },
   },
   extraReducers: builder => {
@@ -49,7 +49,7 @@ const { reducer, actions } = createSlice({
         state.error = null
       })
       .addCase(fetchAllUsers.fulfilled, (state, { payload }) => {
-        state.data = sortData({ array: payload, field: state.sort.field, order: state.sort.order })
+        state.users = sortData({ array: payload, field: state.sort.field, order: state.sort.order })
         state.loading = false
       })
       .addCase(fetchAllUsers.rejected, (state, { error }) => {

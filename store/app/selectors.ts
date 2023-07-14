@@ -1,3 +1,3 @@
 import { RootState } from '../index'
 
-export const getPageAlert = (state: RootState) => state.app.pageAlert
+export const selectPageAlert = (state: RootState) => state.app.pageAlert

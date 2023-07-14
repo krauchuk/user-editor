@@ -4,20 +4,20 @@ import { useForm } from 'react-hook-form'
 import { useSelector } from 'react-redux'
 
 import { Props, FormValues } from './types'
-import { getUser } from '@/store/users/selectedUser/selectors'
-import { fetchAllUsers } from '@/store/users/allUsers/actions'
+import { selectUser } from '@/store/user/selectors'
+import { fetchAllUsers } from '@/store/users/actions'
 import FormTextInput from '../FormTextInput'
 import Button from '../Button'
 import { isEmailValid } from '@/utils'
 import { useAppDispatch } from '@/store/hooks'
-import { updateUser, createUser } from '@/store/users/selectedUser/actions'
+import { updateUser, createUser } from '@/store/user/actions'
 import { Form, FormInputs, FormButtons } from './styles'
 import { setPageAlert } from '@/store/app/slice'
 
 const UserForm = ({ isEditMode }: Props) => {
   const router = useRouter()
   const dispatch = useAppDispatch()
-  const { data: userData, loading } = useSelector(getUser)
+  const { user, loading } = useSelector(selectUser)
 
   const {
     handleSubmit,
@@ -34,20 +34,20 @@ const UserForm = ({ isEditMode }: Props) => {
   })
 
   useEffect(() => {
-    if (!userData || !isEditMode) return
+    if (!user || !isEditMode) return
 
     reset({
-      name: userData.name,
-      username: userData.username,
-      email: userData.email,
-      city: userData.city,
+      name: user.name,
+      username: user.username,
+      email: user.email,
+      city: user.city,
     })
-  }, [userData, reset, isEditMode])
+  }, [user, reset, isEditMode])
 
   const onSubmit = async (data: FormValues) => {
     try {
       if (isEditMode) {
-        await dispatch(updateUser({ id: userData!.id, data })).unwrap()
+        await dispatch(updateUser({ id: user!.id, data })).unwrap()
       } else {
         await dispatch(createUser(data)).unwrap()
       }

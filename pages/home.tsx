@@ -5,22 +5,22 @@ import AlertBanner from '@/components/AlertBanner'
 import PageLayout from '@/components/PageLayout'
 import Button from '@/components/Button'
 import Modal from '@/components/Modal'
-import { fetchAllUsers } from '@/store/users/allUsers/actions'
-import { getAllUsers } from '@/store/users/allUsers/selectors'
-import { deleteUser } from '@/store/users/selectedUser/actions'
+import { fetchAllUsers } from '@/store/users/actions'
+import { selectUsers } from '@/store/users/selectors'
+import { deleteUser } from '@/store/user/actions'
 import { useAppDispatch, useAppSelector } from '@/store/hooks'
-import { getUser } from '@/store/users/selectedUser/selectors'
+import { selectUser } from '@/store/user/selectors'
 import useModal from '@/hooks/useModal'
 import { ModalButtons } from '@/styles/pages/homePage'
-import { resetError as resetDeletionError } from '@/store/users/selectedUser/slice'
+import { resetError as resetDeletionError } from '@/store/user/slice'
 import { setPageAlert } from '@/store/app/slice'
 import UserTable from '@/components/UserTable'
 
 export default function HomePage() {
   const router = useRouter()
   const dispatch = useAppDispatch()
-  const { data: allUsers, sort, loading, error: fetchError } = useAppSelector(getAllUsers)
-  const { loading: currentUserLoading, error: deletionError } = useAppSelector(getUser)
+  const { users, sort, loading, error: fetchError } = useAppSelector(selectUsers)
+  const deletionInfo = useAppSelector(selectUser)
   const deleteModal = useModal({ name: 'deleteModal', metadata: { userId: 0, name: '' } })
 
   const handleDeleteBtn = async () => {
@@ -45,7 +45,7 @@ export default function HomePage() {
   }
 
   useLayoutEffect(() => {
-    if (!allUsers.length) dispatch(fetchAllUsers())
+    if (!users.length) dispatch(fetchAllUsers())
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch])
 
@@ -57,16 +57,16 @@ export default function HomePage() {
         footerSlot={
           <ModalButtons>
             <Button text="Cancel" variant="secondary" onClick={handleCloseBtn} />
-            <Button text="Delete" variant="danger" isDisabled={currentUserLoading} onClick={handleDeleteBtn} />
+            <Button text="Delete" variant="danger" isDisabled={deletionInfo.loading} onClick={handleDeleteBtn} />
           </ModalButtons>
         }
       >
-        {deletionError && <AlertBanner text={deletionError} type="danger" />}
+        {deletionInfo.error && <AlertBanner text={deletionInfo.error} type="danger" />}
         <span>Do you want to delete user: {deleteModal.metadata.name}?</span>
       </Modal>
       {fetchError && <AlertBanner text={fetchError} type="danger" />}
       <UserTable
-        data={allUsers}
+        data={users}
         sortData={sort}
         loading={loading}
         onAddClick={() => router.push('/add')}

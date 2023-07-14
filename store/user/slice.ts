@@ -4,19 +4,19 @@ import { fetchUser, updateUser, createUser, deleteUser } from './actions'
 import { User } from '@/types'
 
 type State = {
-  data: User | null
+  user: User | null
   error: string | null
   loading: boolean
 }
 
 const initialState: State = {
-  data: null,
+  user: null,
   error: null,
   loading: false,
 }
 
 const { reducer, actions } = createSlice({
-  name: 'selectedUser',
+  name: 'user',
   initialState,
   reducers: {
     resetError: state => {
@@ -25,7 +25,7 @@ const { reducer, actions } = createSlice({
   },
   extraReducers: builder => {
     builder.addCase(fetchUser.fulfilled, (state, { payload }) => {
-      state.data = payload
+      state.user = payload
     })
 
     builder

@@ -1,3 +1,3 @@
 import { RootState } from '../index'
 
-export const getAllModalData = (state: RootState) => state.modals
+export const selectModals = (state: RootState) => state.modals

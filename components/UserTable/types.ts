@@ -1,5 +1,5 @@
 import { User } from '@/types'
-import { Sort } from '@/store/users/allUsers/slice'
+import { Sort } from '@/store/users/slice'
 
 export type Props = {
   data: User[]

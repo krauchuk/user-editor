@@ -5,12 +5,12 @@ import { Props } from './types'
 import { Main } from './styles'
 import AlertBanner from '../AlertBanner'
 import { useAppDispatch, useAppSelector } from '@/store/hooks'
-import { getPageAlert } from '@/store/app/selectors'
+import { selectPageAlert } from '@/store/app/selectors'
 import { resetPageAlert } from '@/store/app/slice'
 
 const Layout = ({ children }: Props) => {
   const dispatch = useAppDispatch()
-  const pageAlert = useAppSelector(getPageAlert)
+  const pageAlert = useAppSelector(selectPageAlert)
 
   useLayoutEffect(() => {
     dispatch(resetPageAlert())

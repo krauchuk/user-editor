@@ -4,16 +4,16 @@ import { useRouter } from 'next/router'
 import ErrorBanner from '@/components/AlertBanner'
 import PageLayout from '@/components/PageLayout'
 import UserForm from '@/components/UserForm'
-import { fetchUser } from '@/store/users/selectedUser/actions'
+import { fetchUser } from '@/store/user/actions'
 import { useAppDispatch, useAppSelector } from '@/store/hooks'
-import { getUser } from '@/store/users/selectedUser/selectors'
-import { resetError } from '@/store/users/selectedUser/slice'
+import { selectUserError } from '@/store/user/selectors'
+import { resetError } from '@/store/user/slice'
 
 export default function EditUserPage() {
   const dispatch = useAppDispatch()
   const router = useRouter()
   const { id } = router.query
-  const { error } = useAppSelector(getUser)
+  const error = useAppSelector(selectUserError)
 
   useLayoutEffect(() => {
     dispatch(resetError())
